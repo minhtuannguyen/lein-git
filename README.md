@@ -3,7 +3,7 @@
 A [Leiningen](https://github.com/technomancy/leiningen) plugin which has been made in order to make commit whose messages follow certain pattern.
 
 [![Build Status](https://travis-ci.org/minhtuannguyen/lein-git.svg?branch=master)](https://travis-ci.org/minhtuannguyen/lein-git)
-
+[![Clojars Project](https://img.shields.io/clojars/v/lein-git.svg)](https://clojars.org/lein-git)
 ## Usage
 
 Use this for user-level plugins:
