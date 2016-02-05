@@ -3,4 +3,6 @@
   :url "https://github.com/minhtuannguyen/lein-git"
   :license {:name "Eclipse Public License"
             :url  "http://www.eclipse.org/legal/epl-v10.html"}
+
+  :lein-git [[:story-id] [:software] [:commit-msg]]
   :eval-in-leiningen true)

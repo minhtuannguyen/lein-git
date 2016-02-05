@@ -9,20 +9,22 @@
   (println question)
   (read-line))
 
-(defn commit-msg [story-id software msg]
-  (if (or (str/blank? story-id) (str/blank? software) (str/blank? msg))
+(defn- with-bracket [s] (str "[" s "]"))
+
+(defn commit-msg [answers]
+  (if (some str/blank? answers)
     ""
-    (str "[" story-id "] " "[" software "] " msg)))
+    (let [answer-with-bracket (reduce #(str %1 " " %2) (map with-bracket answers))]
+      (with-bracket answer-with-bracket))))
 
-(defn commit-program []
-  (let [story-id (get-user-input-with "Enter the story id")
-        software (get-user-input-with "Enter the software component")
-        msg (get-user-input-with "Enter the commit message")]
-    (c/commit (commit-msg story-id software msg))))
+(defn commit-program [specification]
+  (let [questions (map #(name %) specification)
+        answers (map #(get-user-input-with (str "Please enter the " %)) questions)]
+    (c/commit (commit-msg answers))))
 
-(defn one-arg-program [param1]
+(defn one-arg-program [param specification]
   (cond
-    (= param1 "commit") (commit-program)
+    (= param "commit") (commit-program specification)
     :else (println "unknown option"))
   (main/exit))
 
@@ -32,6 +34,6 @@
     (main/abort usage-msg))
 
   (when (= 1 (count args))
-    (one-arg-program (first args)))
+    (one-arg-program (first args) (:lein-git-spec project)))
 
   (main/abort usage-msg))
