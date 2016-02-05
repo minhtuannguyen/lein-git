@@ -1,4 +1,4 @@
-(defproject lein-git "0.1.0-SNAPSHOT"
+(defproject lein-git "0.1.0"
   :description "lein-git is a leiningen-plugin which has been made in order to make commit whose messages follow certain pattern"
   :url "https://github.com/minhtuannguyen/lein-git"
   :license {:name "Eclipse Public License"

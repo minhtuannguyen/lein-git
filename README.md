@@ -8,7 +8,7 @@ A [Leiningen](https://github.com/technomancy/leiningen) plugin which has been ma
 ## Usage
 For project-level plugins:
 
-Put `[lein-git "0.1.0-SNAPSHOT"]` into the `:plugins` vector of your project.clj.
+Put `[lein-git "0.1.0"]` into the `:plugins` vector of your project.clj.
 
 You must specify the the commit message pattern by defining `:lein-git-spec` in the project.clj.
  
