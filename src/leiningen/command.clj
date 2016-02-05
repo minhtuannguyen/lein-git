@@ -11,6 +11,6 @@
 (defn commit [message]
   (let [result (sh/sh "git" "commit" "-m" message)]
     (if (is-success result)
-      (println "commited")
-      (println "commit failed with the reason" (:out result)))))
+      (println "Commited with the message: " message)
+      (println "Commit has been rejected with the reason" (:out result)))))
 

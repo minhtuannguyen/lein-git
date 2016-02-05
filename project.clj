@@ -1,6 +1,6 @@
 (defproject lein-git "0.1.0-SNAPSHOT"
-  :description "FIXME: write description"
-  :url "http://example.com/FIXME"
+  :description "lein-git is a leiningen-plugin which has been made in order to make commit whose messages follow certain pattern"
+  :url "https://github.com/minhtuannguyen/lein-git"
   :license {:name "Eclipse Public License"
-            :url "http://www.eclipse.org/legal/epl-v10.html"}
+            :url  "http://www.eclipse.org/legal/epl-v10.html"}
   :eval-in-leiningen true)
