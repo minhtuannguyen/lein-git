@@ -4,18 +4,15 @@ A [Leiningen](https://github.com/technomancy/leiningen) plugin which has been ma
 
 [![Build Status](https://travis-ci.org/minhtuannguyen/lein-git.svg?branch=master)](https://travis-ci.org/minhtuannguyen/lein-git)
 [![Clojars Project](https://img.shields.io/clojars/v/lein-git.svg)](https://clojars.org/lein-git)
+
 ## Usage
-
-Use this for user-level plugins:
-
-Put `[lein-git "0.1.0-SNAPSHOT"]` into the `:plugins` vector of your `:user`
-profile.
-
-Use this for project-level plugins:
+For project-level plugins:
 
 Put `[lein-git "0.1.0-SNAPSHOT"]` into the `:plugins` vector of your project.clj.
 
-You must specify the the commit message pattern by defining `:lein-git-spec` in the project.clj, i.e `:lein-git  [:story-id :software-component  :commit-message]`
+You must specify the the commit message pattern by defining `:lein-git-spec` in the project.clj.
+ 
+i.e `:lein-git  [:story-id :software-component  :commit-message]`
 
 To commit:
 
