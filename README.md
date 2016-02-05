@@ -2,6 +2,8 @@
 
 A Leiningen plugin which has been made in order to make commit whose messages follow certain pattern.
 
+https://travis-ci.org/minhtuannguyen/lein-git.svg?branch=master
+
 ## Usage
 
 Use this for user-level plugins:
