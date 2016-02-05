@@ -12,11 +12,11 @@ Put `[lein-git "0.1.0-SNAPSHOT"]` into the `:plugins` vector of your project.clj
 
 You must specify the the commit message pattern by defining `:lein-git-spec` in the project.clj.
  
-i.e `:lein-git  [:story-id :software-component  :commit-message]`
+i.e `:lein-git-spec  [:story-id :software-component  :commit-message]`
 
 To commit:
 
-    #//Assuming :lein-git  [:story-id :sw  :commit-message]
+    #//Assuming :lein-git-spec  [:story-id :software-component  :commit-message]
     $ lein git commit
     The commit will follow the pattern:  [:story-id :software-component :commit-message]
     
