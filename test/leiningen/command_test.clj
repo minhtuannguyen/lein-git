@@ -25,3 +25,9 @@
     (let [msg "msg"]
       (is (= "Commit has been rejected with the reason: failed"
              (c/commit-with msg failed-shell-fnc))))))
+
+(deftest ^:unit parse-log-str
+  (testing "parse log string"
+    (let [log-s "'{\"commit\":\"e3e\",\n \"message\":\"no\"},\n{\"commit\":\"89b\",\n\"message\":\"f\"},'"]
+      (is (= [{:commit "e3e", :message "no"} {:commit "89b", :message "f"}]
+             (c/parse-log log-s))))))
