@@ -33,34 +33,3 @@
           message [story-id sw msg]]
       (is (= "[ [sw] [implement] ]"
              (c/commit-msg message))))))
-
-(deftest ^:unit parse-spec
-  (testing "parse spec 1"
-    (let [spec [[:story-id :required]
-                [:software-component :optional]
-                [:commit-msg :required]]]
-
-      (is (= [{:question "story-id" :validate-fn c/required-input}
-              {:question "software-component" :validate-fn c/optinal-input}
-              {:question "commit-msg" :validate-fn c/required-input}]
-             (c/parse spec)))))
-
-  (testing "parse spec 2"
-    (let [spec [[:story-id :optional]
-                [:software-component :optional]
-                [:commit-msg :optional]]]
-
-      (is (= [{:question "story-id" :validate-fn c/optinal-input}
-              {:question "software-component" :validate-fn c/optinal-input}
-              {:question "commit-msg" :validate-fn c/optinal-input}]
-             (c/parse spec)))))
-
-  (testing "parse spec 3"
-    (let [spec [[:story-id :required]
-                [:software-component :optional]
-                [:commit-msg :blub]]]
-
-      (is (= [{:question "story-id" :validate-fn c/required-input}
-              {:question "software-component" :validate-fn c/optinal-input}
-              {:question "commit-msg" :validate-fn c/optinal-input}]
-             (c/parse spec))))))
