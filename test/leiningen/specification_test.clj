@@ -3,13 +3,22 @@
             [leiningen.specification :as s]))
 
 (deftest ^:unit get-name-from-spec
-  (testing "parse spec names"
+  (testing "get name from spec"
     (let [spec [[:story-id :required]
                 [:software-component :optional]
                 [:commit-msg :required]]]
 
       (is (= [:story-id :software-component :commit-msg]
-             (s/get-spec-names spec))))))
+             (s/get-all-spec-names spec))))))
+
+(deftest ^:unit get-required-name-from-spec
+  (testing "get required name from spec"
+    (let [spec [[:story-id :required]
+                [:software-component :required]
+                [:commit-msg :optional]]]
+
+      (is (= [:story-id :software-component]
+             (s/get-required-spec-names spec))))))
 
 (deftest ^:unit parse-spec
   (testing "parse spec 1"

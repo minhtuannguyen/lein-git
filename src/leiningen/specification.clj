@@ -15,11 +15,15 @@
         constraint-fnc (detect-validate-fnc second)]
     {:question spec-name :validate-fn constraint-fnc}))
 
-(defn parse [specification]
-  (map #(parse-spec-entry %) specification))
+(defn parse [spec]
+  (map #(parse-spec-entry %) spec))
 
-(defn get-spec-names [specification]
-  (map #(first %) specification))
+(defn get-all-spec-names [spec]
+  (map #(first %) spec))
+
+(defn get-required-spec-names [spec]
+  (get-all-spec-names
+    (filter #(= (second %) :required) spec)))
 
 (defn valid? [spec]
   (not (nil? spec)))

@@ -3,10 +3,13 @@
             [leiningen.specification :as s]))
 
 (defn- log-map-of [extra-content spec]
-  (let [spec-names (s/get-spec-names spec)]
-    (if (= (count extra-content) (count spec-names))
-      (zipmap spec-names extra-content)
-      {})))
+  (let [all-spec-names (s/get-all-spec-names spec)
+        required-spec-name (s/get-required-spec-names spec)]
+    (cond (= (count extra-content) (count all-spec-names))
+          (zipmap all-spec-names extra-content)
+          (= (count extra-content) (count required-spec-name))
+          (zipmap required-spec-name extra-content)
+          :else {})))
 
 (defn- safe-read-msg [s spec]
   (try
