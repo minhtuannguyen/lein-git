@@ -18,5 +18,8 @@
 (defn parse [specification]
   (map #(parse-spec-entry %) specification))
 
+(defn get-spec-names [specification]
+  (map #(first %) specification))
+
 (defn valid? [spec]
   (not (nil? spec)))
