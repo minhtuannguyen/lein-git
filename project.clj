@@ -6,5 +6,5 @@
 
   :dependencies [[org.clojure/data.json "0.2.6"]]
 
-  :lein-git-spec [[:story-id :required] [:software-component :optional] [:commit-msg :required]]
+  :lein-git-spec [[:story-id :required] [:software-component :optional]]
   :eval-in-leiningen true)
