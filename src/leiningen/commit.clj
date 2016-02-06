@@ -25,11 +25,11 @@
 (defn- with-bracket [s]
   (if (str/blank? s)
     ""
-    (str "[" s "]")))
+    (str " [" s "]")))
 
 (defn commit-msg [answers]
   (let [answer-with-bracket (reduce #(str %1 %2) (map with-bracket answers))]
-    (with-bracket answer-with-bracket)))
+    (str "[" answer-with-bracket " ]")))
 
 (defn- detect-validate-fnc [constraint-name]
   (cond

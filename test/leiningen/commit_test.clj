@@ -8,7 +8,7 @@
           sw "sw"
           msg "implement"
           message [story-id sw msg]]
-      (is (= "[[id-123][sw][implement]]"
+      (is (= "[ [id-123] [sw] [implement] ]"
              (c/commit-msg message)))))
 
   (testing "generate commit string from the user input"
@@ -16,14 +16,14 @@
           sw ""
           msg "implement"
           message [story-id sw msg]]
-      (is (= "[[id-123][implement]]"
+      (is (= "[ [id-123] [implement] ]"
              (c/commit-msg message)))))
   (testing "generate commit string from the user input"
     (let [story-id "id-123"
           sw "sw"
           msg ""
           message [story-id sw msg]]
-      (is (= "[[id-123][sw]]"
+      (is (= "[ [id-123] [sw] ]"
              (c/commit-msg message)))))
 
   (testing "generate commit string from the user input"
@@ -31,7 +31,7 @@
           sw "sw"
           msg "implement"
           message [story-id sw msg]]
-      (is (= "[[sw][implement]]"
+      (is (= "[ [sw] [implement] ]"
              (c/commit-msg message))))))
 
 (deftest ^:unit parse-spec
