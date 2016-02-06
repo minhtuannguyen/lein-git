@@ -3,7 +3,8 @@
             [clojure.data.json :as json]
             [leiningen.utils :as u]
             [clojure.string :as str]))
-(def json-format "\"--pretty=format:'{\\\"commit\\\": \\\"%H\\\",%n \\\"message\\\": \\\"%f\\\"},'\"")
+
+(def json-format "--pretty=format:'{\"commit\" : \"%H\",\"message\" : \"%s\"},'")
 
 (defn commit-with [message shell-fnc]
   (if (str/blank? message)
@@ -27,4 +28,4 @@
   (let [result (sh/sh "git" "log" json-format)]
     (if (u/is-success result)
       (log->json (:out result))
-      {:failed (:status result)})))
+      {})))

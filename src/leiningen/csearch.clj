@@ -1,25 +1,23 @@
 (ns leiningen.csearch
-  (:require [leiningen.command :as c]
-            [leiningen.utils :as u]))
-
-(defn query-string []
-  (let [query-string (u/get-input " query")
-        query (read-string query-string)]
-    (println query)))
+  (:require [leiningen.command :as c]))
 
 (defn safe-read-msg [s spec]
   (try
-    (let [log-entries (read-string s)]
-      ;(if (= (count log-entries) (count spec)))
-      )
+    (let [log-entries (read-string s)
+          extra-content (subvec log-entries 0 (dec (count log-entries)))
+          commit-msg (first (reverse log-entries))]
+      (if (= (count extra-content) (count spec))
+        {:commit-msg    commit-msg
+         :extra-content extra-content}
+        {:commit-msg commit-msg}))
     (catch Exception _
-      [:raw-message s])))
+      {:commit-msg s})))
 
 (defn log->edn [{commit :commit message-str :message} spec]
-  (let [parsed-msg (safe-read-msg message-str spec)]
-    {:commit commit :message parsed-msg}))
+  {:commit  commit
+   :message (safe-read-msg message-str spec)})
 
 (defn run [search-query spec]
-  (let [logs (c/get-logs)]
-    ;(map #(log->edn % spec) (log->json (:out result)))
-    (println logs)))
+  (let [logs (c/get-logs)
+        parsed-logs (map #(log->edn % spec) logs)]
+    (println parsed-logs)))
