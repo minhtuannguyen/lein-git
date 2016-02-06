@@ -1,6 +1,8 @@
 (ns leiningen.csearch
   (:require [leiningen.command :as c]
-            [leiningen.specification :as s]))
+            [leiningen.specification :as s]
+            [leiningen.utils :as u]
+            [leiningen.core.main :as main]))
 
 (defn- log-map-of [extra-content spec]
   (let [all-spec-names (s/get-all-spec-names spec)
@@ -30,5 +32,22 @@
   (let [logs (git-logs-fnc)]
     (map #(log->edn % spec) logs)))
 
-(defn run [search-query spec]
-  (println (get-structured-logs spec c/get-logs)))
+(defn display-search-option [[first second]]
+  (str "*" second "(" first ")\n"))
+
+(defn- is-input-valid? [s]
+  (try
+    (Integer/parseInt s)
+    true
+    (catch Exception _
+      false)))
+
+(defn run [spec]
+  (println "Select the field you want to search for: ")
+  (let [indexed-spec-names (map-indexed vector (s/get-all-spec-names spec))
+        question (reduce str (map display-search-option indexed-spec-names))
+        user-decision (u/get-validated-input question is-input-valid?)
+        chosen-spec (nth indexed-spec-names (Integer/parseInt user-decision))
+        db (get-structured-logs spec c/get-logs)]
+
+    (println "you choose " chosen-spec)))

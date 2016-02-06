@@ -9,10 +9,18 @@
     (.substring s 0 (- (count s) (count end)))
     s))
 
-(defn get-input [question]
-  (println (str "\nPlease enter the " question ":"))
-  (read-line))
-
 (defn is-git-repository []
   (let [result (sh/sh "git" "rev-parse")]
     (is-success result)))
+
+(defn get-input [prompt]
+  (println prompt)
+  (read-line))
+
+(defn get-validated-input [question validate-fnc]
+  (loop [input (get-input question)]
+    (if (validate-fnc input)
+      input
+      (do
+        (println "the input was not correct")
+        (recur (get-input question))))))

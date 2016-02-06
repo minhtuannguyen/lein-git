@@ -16,8 +16,8 @@ Moreover, you must specify :lein-git-spec in your project.clj")
     :else (commit/run (second params) spec))
   (main/exit))
 
-(defn search-program [query spec]
-  (search/run query spec)
+(defn search-program [spec]
+  (search/run spec)
   (main/exit))
 
 (defn git
@@ -26,13 +26,13 @@ Moreover, you must specify :lein-git-spec in your project.clj")
     (if (and
           (u/is-git-repository)
           (spec/valid? spec))
-      (println "All commits follow the spec: " spec)
+      (println "All commits follow the spec: " spec "\n")
       (main/abort usage-msg))
 
     (when (and (>= 3 (count args)) (= (first args) "commit"))
       (commit-program (rest args) spec))
 
-    (when (and (>= 2 (count args)) (= (first args) "search"))
-      (search-program (second args) spec))
+    (when (and (>= 1 (count args)) (= (first args) "search"))
+      (search-program spec))
 
     (main/abort usage-msg)))

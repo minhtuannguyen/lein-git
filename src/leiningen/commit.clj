@@ -7,12 +7,7 @@
 (def commit c/commit)
 
 (defn get-validated-input [{question :question validate-fnc :validate-fn}]
-  (loop [input (u/get-input question)]
-    (if (validate-fnc input)
-      input
-      (do
-        (println "the input was not correct")
-        (recur (u/get-input question))))))
+  (u/get-validated-input (str "\nPlease enter the " question ":") validate-fnc))
 
 (defn- ask-user-with [questions]
   (map #(get-validated-input %) questions))
