@@ -30,4 +30,4 @@
   (testing "parse log string"
     (let [log-s "'{\"commit\":\"e3e\",\n \"message\":\"no\"},\n{\"commit\":\"89b\",\n\"message\":\"f\"},'"]
       (is (= [{:commit "e3e", :message "no"} {:commit "89b", :message "f"}]
-             (c/parse-log log-s))))))
+             (c/log->json log-s))))))

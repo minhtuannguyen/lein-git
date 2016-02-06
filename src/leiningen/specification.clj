@@ -17,3 +17,6 @@
 
 (defn parse [specification]
   (map #(parse-spec-entry %) specification))
+
+(defn valid? [spec]
+  (not (nil? spec)))
