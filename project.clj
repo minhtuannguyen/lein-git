@@ -4,5 +4,5 @@
   :license {:name "Eclipse Public License"
             :url  "http://www.eclipse.org/legal/epl-v10.html"}
 
-  :lein-git [[:story-id] [:software] [:commit-msg]]
+  :lein-git-spec [[:story-id :required] [:software-component :optional] [:commit-msg :required]]
   :eval-in-leiningen true)
