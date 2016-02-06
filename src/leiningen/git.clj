@@ -4,25 +4,26 @@
             [leiningen.command :as command]
             [leiningen.csearch :as search]))
 
-(def usage-msg "Usage: lein git-msg commit\n
+(def usage-msg "Usage: lein git commit -m message\n
 The current dir must be a git repository.
 Moreover, you must specify :lein-git-spec in your project.clj")
 
-(defn one-arg-program [param specification]
+(defn commit-program [params specification]
   (cond
-    (= param "commit") (commit/run specification)
-    (= param "search") (search/run specification)
-    :else (main/abort usage-msg))
+    (or (not= (count params) 2) (not= (first params) "-m")) (main/abort usage-msg)
+    :else (commit/run (second params) specification))
   (main/exit))
 
 (defn git
   [project & args]
+  (println args)
   (when (or
           (not (command/is-git-repository))
           (nil? (:lein-git-spec project)))
     (main/abort usage-msg))
 
-  (when (= 1 (count args))
-    (one-arg-program (first args) (:lein-git-spec project)))
+
+  (when (and (>= 3 (count args)) (= (first args) "commit"))
+    (commit-program (rest args) (:lein-git-spec project)))
 
   (main/abort usage-msg))

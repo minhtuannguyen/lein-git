@@ -25,13 +25,13 @@
     ""
     (str " [" s "]")))
 
-(defn commit-msg [answers]
+(defn commit-msg [answers msg]
   (let [answer-with-bracket (reduce #(str %1 %2) (map with-bracket answers))]
-    (str "[" answer-with-bracket " ]")))
+    (str "[" answer-with-bracket " [" msg "] ]")))
 
-(defn run [spec]
+(defn run [msg spec]
   (println "The commit will follow the pattern: " spec)
   (let [questions (spec/parse spec)
         answers (ask-user-with questions)
-        commit-msg (commit-msg answers)]
+        commit-msg (commit-msg answers msg)]
     (commit commit-msg)))
