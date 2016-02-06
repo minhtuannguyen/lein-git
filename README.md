@@ -1,6 +1,6 @@
 # lein-git
 
-A [Leiningen](https://github.com/technomancy/leiningen) plugin which has been made in order to make commit whose messages follow certain pattern.
+A [Leiningen](https://github.com/technomancy/leiningen) plugin to make structural commit message.
 
 [![Build Status](https://travis-ci.org/minhtuannguyen/lein-git.svg?branch=master)](https://travis-ci.org/minhtuannguyen/lein-git)
 [![Clojars Project](https://img.shields.io/clojars/v/lein-git.svg)](https://clojars.org/lein-git)
@@ -12,13 +12,15 @@ Put `[lein-git "0.1.0-SNAPSHOT"]` into the `:plugins` vector of your project.clj
 
 You must specify the the commit message pattern by defining `:lein-git-spec` in the project.clj.
  
-i.e `:lein-git-spec  [:story-id :software-component  :commit-message]`
+i.e `:lein-git-spec [[:story-id :required] [:software-component :optional] [:commit-msg :required]]`
+
+`:required` means that the field must be entered in order to commit
 
 To commit:
 
-    #//Assuming :lein-git-spec  [:story-id :software-component  :commit-message]
+    #//Assuming :lein-git-spec [[:story-id :required] [:software-component :optional] [:commit-msg :required]]
     $ lein git commit
-    The commit will follow the pattern:  [:story-id :software-component :commit-message]
+    The commit will follow the pattern :lein-git-spec [[:story-id :required] [:software-component :optional] [:commit-msg :required]]
     
     Please enter the story-id
     JIRA-1234

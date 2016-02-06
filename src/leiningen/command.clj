@@ -11,7 +11,7 @@
 
 (defn commit-with [message shell-fnc]
   (if (str/blank? message)
-    "Commit message is not correct"
+    "Commit message can not be empty"
     (let [result (shell-fnc "git" "commit" "-m" message)]
       (if (is-success result)
         (str "Commited with the message: " message)

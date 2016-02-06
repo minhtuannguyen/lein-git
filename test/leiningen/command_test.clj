@@ -2,10 +2,10 @@
   (:require [clojure.test :refer :all]
             [leiningen.command :as c]))
 
-(defn- successful-shell-fnc [& args]
+(defn- successful-shell-fnc [& _]
   {:exit 0 :out ""})
 
-(defn- failed-shell-fnc [& args]
+(defn- failed-shell-fnc [& _]
   {:exit 128 :out "failed"})
 
 (deftest ^:unit commit-successfully
@@ -17,7 +17,7 @@
 (deftest ^:unit commit-failed
   (testing "commit failed because message is empty"
     (let [msg ""]
-      (is (= "Commit message is not correct"
+      (is (= "Commit message can not be empty"
              (c/commit-with msg successful-shell-fnc))))))
 
 (deftest ^:unit commit-failed-msg

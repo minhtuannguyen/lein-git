@@ -2,30 +2,52 @@
   (:require [clojure.string :as str]
             [leiningen.command :as c]))
 
-(defn- get-user-input-with [question]
-  (println question)
+(def commit c/commit)
+
+(defn required-input [input] (not (str/blank? input)))
+(defn optinal-input [_] true)
+
+(defn get-input [question]
+  (println (str "\nPlease enter the " question ":"))
   (read-line))
 
+(defn get-validated-input [{question :question validate-fnc :validate-fn}]
+  (loop [input (get-input question)]
+    (if (validate-fnc input)
+      input
+      (do
+        (println "the input was not correct")
+        (recur (get-input question))))))
+
 (defn- ask-user-with [questions]
-  (map #(get-user-input-with (str "\nPlease enter the " % ":")) questions))
+  (map #(get-validated-input %) questions))
 
-(defn- with-bracket [s] (str "[" s "]"))
-
-(defn- build-commit-msg-from [answers]
-  (let [answer-with-bracket (reduce #(str %1 " " %2) (map with-bracket answers))]
-    (with-bracket answer-with-bracket)))
+(defn- with-bracket [s]
+  (if (str/blank? s)
+    ""
+    (str "[" s "]")))
 
 (defn commit-msg [answers]
-  (if (some str/blank? answers)
-    ""
-    (build-commit-msg-from answers)))
+  (let [answer-with-bracket (reduce #(str %1 %2) (map with-bracket answers))]
+    (with-bracket answer-with-bracket)))
 
-(defn parse-specification [specification]
-  (map #(name %) specification))
+(defn- detect-validate-fnc [constraint-name]
+  (cond
+    (= (name constraint-name) "required") required-input
+    (= (name constraint-name) "optional") optinal-input
+    :else optinal-input))
+
+(defn- parse-spec-entry [[first second]]
+  (let [spec-name (name first)
+        constraint-fnc (detect-validate-fnc second)]
+    {:question spec-name :validate-fn constraint-fnc}))
+
+(defn parse [specification]
+  (map #(parse-spec-entry %) specification))
 
 (defn run [spec]
   (println "The commit will follow the pattern: " spec)
-  (let [questions (parse-specification spec)
+  (let [questions (parse spec)
         answers (ask-user-with questions)
         commit-msg (commit-msg answers)]
-    (c/commit commit-msg)))
+    (commit commit-msg)))
