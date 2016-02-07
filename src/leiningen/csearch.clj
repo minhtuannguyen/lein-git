@@ -59,10 +59,6 @@
 (defn pp-fnc [results]
   (map pp-entry-fnc results))
 
-(defn- print-result [results spec query]
-  (println "\nRESULT FOR YOUR QUERY " spec "=" query)
-  (pp/print-table (pp-fnc results)))
-
 (defn do [spec]
   (println "Select the field you want to search for: ")
   (let [indexed-spec (map-indexed vector (s/get-all-spec-names spec))
@@ -72,6 +68,8 @@
         user-query (u/get-validated-input ask-for-query u/not-blank?)
         db (structured-logs-of spec c/get-logs)
         search-result (search db user-query user-spec-name)]
+
+    (println "For your query " user-spec-name "=" user-query ": ")
     (if (= 0 (count search-result))
-      (println "NO COMMIT MATCHES YOUR QUERY " user-spec-name "=" user-query)
-      (print-result search-result user-spec-name user-query))))
+      (println "No commit matches your query")
+      (pp/print-table (pp-fnc search-result)))))
