@@ -5,11 +5,13 @@
             [leiningen.csearch :as search]
             [leiningen.specification :as spec]))
 
-(def usage-msg "
+(def usage "
 Usage:
-to commit: lein git commit [-m -am] \"message\"
-to search: lein git search
-to see spec: lein git spec
+to commit:  - lein git commit [-m -am] \"message\"
+to search:  - lein git search -i for the interactive mode
+            - lein git search -q \"query\" :story-id=JIRA-1234
+to see spec - lein git spec
+
 The current dir must be a git repository.
 Moreover, you must specify :lein-git-spec in your project.clj")
 
@@ -19,18 +21,25 @@ Moreover, you must specify :lein-git-spec in your project.clj")
   (cond
     (or (= first-arg "-m") (= first-arg "-am"))
     (commit-fnc second-arg spec)
-    :else (main/abort usage-msg)))
+    :else (main/abort usage)))
 
-(defn search-program [spec search-fnc]
-  (search-fnc spec))
+(defn search-program [spec args]
+  (cond
+    (= (first args) "-i")
+    (search/do-in-interactive-mode spec)
+    (= (first args) "-q")
+    (search/do-in-query-mode (second args) spec)
+    :else (main/abort usage)))
 
 (defn- main-program [args spec]
+  (when (= 0 (count args))
+    (println usage))
 
-  (when (and (= 1 (count args)) (= (first args) "spec"))
+  (when (= (first args) "spec")
     (print-found spec))
 
-  (when (and (= 1 (count args)) (= (first args) "search"))
-    (search-program spec search/do))
+  (when (= (first args) "search")
+    (search-program spec (rest args)))
 
   (when (and (= 3 (count args)) (= (first args) "commit"))
     (commit-program (rest args) spec commit/do))
@@ -50,4 +59,4 @@ Moreover, you must specify :lein-git-spec in your project.clj")
   (let [spec (:lein-git-spec project)]
     (if (project-valid? spec)
       (main-program args spec)
-      (main/abort usage-msg))))
+      (main/abort usage))))

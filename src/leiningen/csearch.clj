@@ -1,6 +1,7 @@
 (ns leiningen.csearch
   (:require [leiningen.command :as c]
             [leiningen.specification :as s]
+            [clojure.string :as str]
             [clojure.pprint :as pp]
             [leiningen.utils :as u]))
 
@@ -49,9 +50,6 @@
   (let [content (get-in entry [:message spec-name])]
     (and (not (nil? content)) (.contains content query))))
 
-(defn search [db query spec-name]
-  (filter #(matches? % spec-name query) db))
-
 (defn pp-entry-fnc [result]
   (-> (:message result)
       (assoc :commit (:commit result))))
@@ -59,17 +57,36 @@
 (defn pp-fnc [results]
   (map pp-entry-fnc results))
 
-(defn do [spec]
+(defn search [db query spec-name]
+  (filter #(matches? % spec-name query) db))
+
+(defn do-search [db query spec-name]
+  (println "For your query " spec-name "=" query ": ")
+  (let [search-result (search db query spec-name)]
+    (if (= 0 (count search-result))
+      (println "No commit matches your query")
+      (pp/print-table (pp-fnc search-result)))))
+
+(defn do-in-interactive-mode [spec]
   (println "Select the field you want to search for: ")
   (let [indexed-spec (map-indexed vector (s/get-all-spec-names spec))
         question (reduce str (map search-option-display-str indexed-spec))
         user-spec (u/get-validated-input question input-valid?)
         user-spec-name (second (nth indexed-spec (Integer/parseInt user-spec)))
         user-query (u/get-validated-input ask-for-query u/not-blank?)
-        db (structured-logs-of spec c/get-logs)
-        search-result (search db user-query user-spec-name)]
+        db (structured-logs-of spec c/get-logs)]
+    (do-search db user-query user-spec-name)))
 
-    (println "For your query " user-spec-name "=" user-query ": ")
-    (if (= 0 (count search-result))
-      (println "No commit matches your query")
-      (pp/print-table (pp-fnc search-result)))))
+(defn parse-query [query]
+  (try
+    (str/split query #"=")
+    (catch Exception _
+      [nil nil])))
+
+(defn do-in-query-mode [query spec]
+  (println "cc" query)
+  (let [[spec-name value] (parse-query query)]
+    (when (or (nil? spec-name) (nil? value))
+      (println "query is not correct"))
+    (do-search
+      (structured-logs-of spec c/get-logs) value spec-name)))
