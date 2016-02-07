@@ -48,7 +48,7 @@
   (let [content (get-in entry [:message spec-name])]
     (and (not (nil? content)) (.contains content query))))
 
-(defn- search [db query spec-name]
+(defn search [db query spec-name]
   (filter #(matches? % spec-name query) db))
 
 (defn- print-result [results spec query]

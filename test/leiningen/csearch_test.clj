@@ -25,3 +25,30 @@
                         :software-component "[order]",
                         :commit-msg         "[implement add2basket]"}}
              (first logs))))))
+
+(deftest ^:unit search-test
+  (testing "search with a key"
+    (let [spec :story-id
+          db [{:commit "commit 1" :message {:story-id           "[JIRA-123]",
+                                            :software-component "[order]",
+                                            :commit-msg         "[msg 1]"}}
+              {:commit "commit 2" :message {:story-id           "[JIRA-678]",
+                                            :software-component "[search]",
+                                            :commit-msg         "[msg 2]"}}]
+          query "JIRA-123"
+          results (s/search db query spec)]
+      (is (= 1 (count results)))
+      (is (= "commit 1" (:commit (first results))))))
+
+  (testing "search with another key"
+    (let [spec :software-component
+          db [{:commit "commit 1" :message {:story-id           "[JIRA-123]",
+                                            :software-component "[order]",
+                                            :commit-msg         "[msg 1]"}}
+              {:commit "commit 2" :message {:story-id           "[JIRA-678]",
+                                            :software-component "[search]",
+                                            :commit-msg         "[msg 2]"}}]
+          query "search"
+          results (s/search db query spec)]
+      (is (= 1 (count results)))
+      (is (= "commit 2" (:commit (first results)))))))
