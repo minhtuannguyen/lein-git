@@ -46,11 +46,14 @@ To search:
     Enter your query:
     JIRA-4
     
-    RESULT FOR YOUR QUERY  :story-id = JIRA -4
+    RESULT FOR YOUR QUERY  :story-id = JIRA-4
     
-    ||=================COMMIT==================||===================MESSAGE===================
-    ||9fc918a25cb8e37d61d1c9ed7bdc09a8a0836512 || {:story-id "[JIRA-4]", :software-component "[order]", :commit-msg "[implement a]"}
-    ||f28a1cfa4fe66edb263fda6eba082181f34db506 || {:story-id "[JIRA-4]", :software-component "[order]", :commit-msg "[implement a"}
+    |       :story-id | :software-component | :commit-msg |                                  :commit |
+    |-----------------+---------------------+-------------+------------------------------------------|
+    |    [JIRA-4]     |              [view] |        [hi] | f4f8f0fe6423e9fd206f4cb5bab6f0dc1e27d5ea |
+    |    [JIRA-4]     |             [order] |        [hi] | 7f6d85e424e3a15ee34b17df4587c78ab10465ac |
+    |    [JIRA-4]     |              [view] |        [hi] | 4075b70524d9ea63eeaa70ea16eac0264680857d |
+    
    
 
 ## License
