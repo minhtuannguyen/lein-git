@@ -48,7 +48,10 @@
 
 (defn- matches? [entry spec-name query]
   (let [content (get-in entry [:message spec-name])]
-    (and (not (nil? content)) (.contains content query))))
+    (and
+      (not (nil? content))
+      (or (.contains content query)
+          (.contains (str/lower-case content) query)))))
 
 (defn pp-entry-fnc [result]
   (-> (:message result)
