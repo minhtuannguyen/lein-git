@@ -52,3 +52,37 @@
           results (s/search db query spec)]
       (is (= 1 (count results)))
       (is (= "commit 2" (:commit (first results)))))))
+
+(deftest ^:unit pp-fnc-test
+  (testing "pp test"
+    (let [results [{:commit "commit 1" :message {:story-id           "[JIRA-123]",
+                                                 :software-component "[order]",
+                                                 :commit-msg         "[msg 1]"}}
+
+                   {:commit "commit 2" :message {:story-id           "[JIRA-678]",
+                                                 :software-component "[search]",
+                                                 :commit-msg         "[msg 2]"}}]]
+
+      (is (= [{:commit             "commit 1"
+               :story-id           "[JIRA-123]",
+               :software-component "[order]",
+               :commit-msg         "[msg 1]"}
+
+              {:commit             "commit 2"
+               :story-id           "[JIRA-678]",
+               :software-component "[search]",
+               :commit-msg         "[msg 2]"}]
+
+             (s/pp-fnc results)))))
+
+  (testing "pp-entry test"
+    (let [results {:commit "commit 1" :message {:story-id           "[JIRA-123]",
+                                                :software-component "[order]",
+                                                :commit-msg         "[msg 1]"}}]
+
+      (is (= {:commit             "commit 1"
+              :story-id           "[JIRA-123]",
+              :software-component "[order]",
+              :commit-msg         "[msg 1]"}
+
+             (s/pp-entry-fnc results))))))

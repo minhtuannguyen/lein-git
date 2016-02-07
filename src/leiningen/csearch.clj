@@ -52,9 +52,16 @@
 (defn search [db query spec-name]
   (filter #(matches? % spec-name query) db))
 
+(defn pp-entry-fnc [result]
+  (-> (:message result)
+      (assoc :commit (:commit result))))
+
+(defn pp-fnc [results]
+  (map pp-entry-fnc results))
+
 (defn- print-result [results spec query]
-  (println "\nRESULT FOR YOUR QUERY " spec "=" query "\n")
-  (pp/print-table results))
+  (println "\nRESULT FOR YOUR QUERY " spec "=" query)
+  (pp/print-table (pp-fnc results)))
 
 (defn do [spec]
   (println "Select the field you want to search for: ")
