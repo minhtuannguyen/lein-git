@@ -9,7 +9,7 @@
                 [:commit-msg :required]]]
 
       (is (= [:story-id :software-component :commit-msg]
-             (s/get-all-spec-names spec))))))
+             (s/all-names-of spec))))))
 
 (deftest ^:unit get-required-name-from-spec
   (testing "get required name from spec"
@@ -18,7 +18,7 @@
                 [:commit-msg :optional]]]
 
       (is (= [:story-id :software-component]
-             (s/get-required-spec-names spec))))))
+             (s/required-names-of spec))))))
 
 (deftest ^:unit parse-spec
   (testing "parse spec 1"

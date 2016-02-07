@@ -18,11 +18,11 @@
 (defn parse [spec]
   (map #(parse-spec-entry %) spec))
 
-(defn get-all-spec-names [spec]
+(defn all-names-of [spec]
   (map #(first %) spec))
 
-(defn get-required-spec-names [spec]
-  (get-all-spec-names
+(defn required-names-of [spec]
+  (all-names-of
     (filter #(= (second %) :required) spec)))
 
 (defn valid? [spec]
