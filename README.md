@@ -56,7 +56,7 @@ To search:
     |    [JIRA-4]     |              [view] |        [hi] | 4075b70524d9ea63eeaa70ea16eac0264680857d |
     
     #Alternativ in query mode
-    $ lein git search -q "story-id = JIRA-4"
+    $ lein git search -q "story-id=JIRA-4"
     
 
 
