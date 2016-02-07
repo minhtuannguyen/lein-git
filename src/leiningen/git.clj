@@ -5,7 +5,9 @@
             [leiningen.csearch :as search]
             [leiningen.specification :as spec]))
 
-(def usage-msg "Usage: lein git commit -m message\n
+(def usage-msg "Usage:
+to commit: lein git commit -m \"message\"
+to search: lein search
 The current dir must be a git repository.
 Moreover, you must specify :lein-git-spec in your project.clj")
 
@@ -26,7 +28,7 @@ Moreover, you must specify :lein-git-spec in your project.clj")
     (if (and
           (u/is-git-repository)
           (spec/valid? spec))
-      (println "All commits follow the spec: " spec "\n")
+      (println "The lein-git-spec found in the project: " spec "\n")
       (main/abort usage-msg))
 
     (when (and (>= 3 (count args)) (= (first args) "commit"))
