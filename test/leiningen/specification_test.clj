@@ -27,7 +27,7 @@
                 [:commit-msg :required]]]
 
       (is (= [{:question "story-id" :validate-fn s/required-input}
-              {:question "software-component" :validate-fn s/optinal-input}
+              {:question "software-component" :validate-fn s/optional-input}
               {:question "commit-msg" :validate-fn s/required-input}]
              (s/parse spec)))))
 
@@ -36,9 +36,9 @@
                 [:software-component :optional]
                 [:commit-msg :optional]]]
 
-      (is (= [{:question "story-id" :validate-fn s/optinal-input}
-              {:question "software-component" :validate-fn s/optinal-input}
-              {:question "commit-msg" :validate-fn s/optinal-input}]
+      (is (= [{:question "story-id" :validate-fn s/optional-input}
+              {:question "software-component" :validate-fn s/optional-input}
+              {:question "commit-msg" :validate-fn s/optional-input}]
              (s/parse spec)))))
 
   (testing "parse spec 3"
@@ -47,7 +47,7 @@
                 [:commit-msg :blub]]]
 
       (is (= [{:question "story-id" :validate-fn s/required-input}
-              {:question "software-component" :validate-fn s/optinal-input}
-              {:question "commit-msg" :validate-fn s/optinal-input}]
+              {:question "software-component" :validate-fn s/optional-input}
+              {:question "commit-msg" :validate-fn s/optional-input}]
              (s/parse spec))))))
 

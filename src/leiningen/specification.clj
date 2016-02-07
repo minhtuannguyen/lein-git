@@ -2,13 +2,13 @@
   (:require [leiningen.utils :as u]))
 
 (defn required-input [input] (u/not-blank? input))
-(defn optinal-input [_] true)
+(defn optional-input [_] true)
 
 (defn- detect-validate-fnc [constraint-name]
   (cond
     (= constraint-name :required) required-input
-    (= constraint-name :optional) optinal-input
-    :else optinal-input))
+    (= constraint-name :optional) optional-input
+    :else optional-input))
 
 (defn- parse-spec-entry [[first second]]
   (let [spec-name (name first)
