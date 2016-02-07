@@ -5,9 +5,11 @@
             [leiningen.csearch :as search]
             [leiningen.specification :as spec]))
 
-(def usage-msg "Usage:
+(def usage-msg "
+Usage:
 to commit: lein git commit [-m -am] \"message\"
 to search: lein search
+
 The current dir must be a git repository.
 Moreover, you must specify :lein-git-spec in your project.clj")
 
@@ -33,9 +35,17 @@ Moreover, you must specify :lein-git-spec in your project.clj")
 
   (main/exit))
 
+(defn- project-valid? [spec]
+  (cond
+    (not (u/is-git-repository?))
+    (do (println "It is not a git repository") false)
+    (not (spec/valid? spec))
+    (do (println ":lein-git-spec has not been defined in the project") false)
+    :else true))
+
 (defn git
   [project & args]
   (let [spec (:lein-git-spec project)]
-    (if (and (u/is-git-repository?) (spec/valid? spec))
+    (if (project-valid? spec)
       (main-program args spec)
       (main/abort usage-msg))))
