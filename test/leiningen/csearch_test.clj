@@ -7,7 +7,7 @@
     (let [spec [[:story-id :required] [:software-component :required]]
           git-log-fnc (fn [] [{:commit  "12345",
                                :message "[ [id-123] [sw] [implement] ]"}])
-          logs (s/get-structured-logs spec git-log-fnc)]
+          logs (s/structured-logs-of spec git-log-fnc)]
       (is (= {:commit  "12345",
               :message {:story-id           "[id-123]",
                         :software-component "[sw]",
@@ -19,7 +19,7 @@
     (let [spec [[:story-id :required] [:software-component :required] [:developer :optional]]
           git-log-fnc (fn [] [{:commit  "54321",
                                :message "[ [id-321] [order] [implement add2basket] ]"}])
-          logs (s/get-structured-logs spec git-log-fnc)]
+          logs (s/structured-logs-of spec git-log-fnc)]
       (is (= {:commit  "54321",
               :message {:story-id           "[id-321]",
                         :software-component "[order]",

@@ -9,10 +9,10 @@
 (defn commit-with [message shell-fnc]
   (if (str/blank? message)
     "Commit message can not be empty"
-    (let [result (shell-fnc "git" "commit" "-m" message)]
-      (if (u/is-success result)
+    (let [shell-result (shell-fnc "git" "commit" "-m" message)]
+      (if (u/is-success? shell-result)
         (str "Commited with the message: " message)
-        (str "Commit has been rejected with the reason: " (:out result))))))
+        (str "Commit has been rejected with the reason: " (:out shell-result))))))
 
 (defn commit [message]
   (let [result (commit-with message sh/sh)]
@@ -23,11 +23,11 @@
         wo-double-quote (str/replace wo-singe_quote #"\"" "")
         convert-json-magic-to-doube-quoute (str/replace wo-double-quote #"####====" "\"")
         wo-last-singe-quoute (u/remove-from-end convert-json-magic-to-doube-quoute ",")
-        complete-s (str "[" (str/replace wo-last-singe-quoute #"\'" "") "]")]
-    (json/read-str complete-s :key-fn keyword)))
+        valid-json-str (str "[" (str/replace wo-last-singe-quoute #"\'" "") "]")]
+    (json/read-str valid-json-str :key-fn keyword)))
 
 (defn get-logs []
   (let [result (sh/sh "git" "log" json-format)]
-    (if (u/is-success result)
+    (if (u/is-success? result)
       (log->json (:out result))
       {})))

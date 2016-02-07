@@ -2,7 +2,7 @@
   (:require [clojure.java.shell :as sh]
             [clojure.string :as str]))
 
-(defn is-success [shell-result]
+(defn is-success? [shell-result]
   (= (:exit shell-result) 0))
 
 (defn remove-from-end [s end]
@@ -10,9 +10,9 @@
     (.substring s 0 (- (count s) (count end)))
     s))
 
-(defn is-git-repository []
+(defn is-git-repository? []
   (let [result (sh/sh "git" "rev-parse")]
-    (is-success result)))
+    (is-success? result)))
 
 (defn not-blank? [s]
   (not (str/blank? s)))

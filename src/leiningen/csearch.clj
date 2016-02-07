@@ -3,16 +3,17 @@
             [leiningen.specification :as s]
             [leiningen.utils :as u]))
 
-(def ask-for-query "\nEnter your query:")
+(def ask-for-query-str "\nEnter your query:")
 
-(defn- log-map-of [extra-content spec]
+(defn- logs-map-of [extra-content spec]
   (let [all-spec-names (s/get-all-spec-names spec)
-        required-spec-name (s/get-required-spec-names spec)]
-    (cond (= (count extra-content) (count all-spec-names))
-          (zipmap all-spec-names extra-content)
-          (= (count extra-content) (count required-spec-name))
-          (zipmap required-spec-name extra-content)
-          :else {})))
+        required-spec-names (s/get-required-spec-names spec)]
+    (cond
+      (= (count extra-content) (count all-spec-names))
+      (zipmap all-spec-names extra-content)
+      (= (count extra-content) (count required-spec-names))
+      (zipmap required-spec-names extra-content)
+      :else {})))
 
 (defn- safe-read-msg [s spec]
   (try
@@ -20,7 +21,7 @@
           commit-msg (first (reverse log-entries))
           extra-content (drop-last log-entries)]
       (-> extra-content
-          (log-map-of spec)
+          (logs-map-of spec)
           (assoc :commit-msg commit-msg)))
     (catch Exception _
       {:commit-msg s})))
@@ -29,11 +30,11 @@
   {:commit  commit
    :message (safe-read-msg message-str spec)})
 
-(defn get-structured-logs [spec git-logs-fnc]
+(defn structured-logs-of [spec git-logs-fnc]
   (let [logs (git-logs-fnc)]
     (map #(log->edn % spec) logs)))
 
-(defn- display-search-option [[first second]]
+(defn- search-option-display-str [[first second]]
   (str "**** " second " -> (Enter " first ")\n"))
 
 (defn- is-input-valid? [s]
@@ -43,12 +44,12 @@
     (catch Exception _
       false)))
 
-(defn- matches [entry spec-name query]
+(defn- matches? [entry spec-name query]
   (let [content (get-in entry [:message spec-name])]
     (and (not (nil? content)) (.contains content query))))
 
 (defn- search [db query spec-name]
-  (filter #(matches % spec-name query) db))
+  (filter #(matches? % spec-name query) db))
 
 (defn- print-result [results spec query]
   (println "\nRESULT FOR YOUR QUERY " spec "=" query "\n
@@ -57,14 +58,14 @@
     (println (reduce str result-representation))
     (println "\n")))
 
-(defn run [spec]
+(defn do [spec]
   (println "Select the field you want to search for: ")
   (let [indexed-spec (map-indexed vector (s/get-all-spec-names spec))
-        question (reduce str (map display-search-option indexed-spec))
+        question (reduce str (map search-option-display-str indexed-spec))
         user-spec-decision (u/get-validated-input question is-input-valid?)
         chosen-spec-name (second (nth indexed-spec (Integer/parseInt user-spec-decision)))
-        user-query (u/get-validated-input ask-for-query u/not-blank?)
-        db (get-structured-logs spec c/get-logs)
+        user-query (u/get-validated-input ask-for-query-str u/not-blank?)
+        db (structured-logs-of spec c/get-logs)
         search-result (search db user-query chosen-spec-name)]
     (if (= 0 (count search-result))
       (println "NO COMMIT MATCHES YOUR QUERY " chosen-spec-name "=" user-query)

@@ -9,7 +9,7 @@
           msg "implement"
           message [story-id sw]]
       (is (= "[ [id-123] [sw] [implement] ]"
-             (c/commit-msg message msg)))))
+             (c/build-commit-msg message msg)))))
 
   (testing "generate commit string from the user input"
     (let [story-id "id-123"
@@ -17,14 +17,14 @@
           msg "implement"
           message [story-id sw]]
       (is (= "[ [id-123] [implement] ]"
-             (c/commit-msg message msg)))))
+             (c/build-commit-msg message msg)))))
   (testing "generate commit string from the user input"
     (let [story-id "id-123"
           sw "sw"
           msg ""
           message [story-id sw]]
       (is (= "[ [id-123] [sw] [] ]"
-             (c/commit-msg message msg)))))
+             (c/build-commit-msg message msg)))))
 
   (testing "generate commit string from the user input"
     (let [story-id ""
@@ -32,4 +32,4 @@
           msg "implement"
           message [story-id sw]]
       (is (= "[ [sw] [implement] ]"
-             (c/commit-msg message msg))))))
+             (c/build-commit-msg message msg))))))

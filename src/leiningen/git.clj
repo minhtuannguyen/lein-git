@@ -6,35 +6,36 @@
             [leiningen.specification :as spec]))
 
 (def usage-msg "Usage:
-to commit: lein git commit -m \"message\"
+to commit: lein git commit [-m -am] \"message\"
 to search: lein search
 The current dir must be a git repository.
 Moreover, you must specify :lein-git-spec in your project.clj")
 
-(defn commit-program [params spec]
-  (cond
-    (or (not= (count params) 2) (not= (first params) "-m"))
-    (main/abort usage-msg)
-    :else (commit/run (second params) spec))
-  (main/exit))
+(defn print-found [spec] (println "The lein-git-spec found in the project: " spec "\n"))
 
-(defn search-program [spec]
-  (search/run spec)
+(defn commit-program [[first-arg second-arg] spec commit-fnc]
+  (cond
+    (or (= first-arg "-m") (= first-arg "-am"))
+    (commit-fnc second-arg spec)
+    :else (main/abort usage-msg)))
+
+(defn search-program [spec search-fnc]
+  (search-fnc spec))
+
+(defn- main-program [args spec]
+  (print-found spec)
+
+  (when (and (= 3 (count args)) (= (first args) "commit"))
+    (commit-program (rest args) spec commit/do))
+
+  (when (and (= 1 (count args)) (= (first args) "search"))
+    (search-program spec search/do))
+
   (main/exit))
 
 (defn git
   [project & args]
   (let [spec (:lein-git-spec project)]
-    (if (and
-          (u/is-git-repository)
-          (spec/valid? spec))
-      (println "The lein-git-spec found in the project: " spec "\n")
-      (main/abort usage-msg))
-
-    (when (and (>= 3 (count args)) (= (first args) "commit"))
-      (commit-program (rest args) spec))
-
-    (when (and (>= 1 (count args)) (= (first args) "search"))
-      (search-program spec))
-
-    (main/abort usage-msg)))
+    (if (and (u/is-git-repository?) (spec/valid? spec))
+      (main-program args spec)
+      (main/abort usage-msg))))
