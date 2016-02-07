@@ -15,6 +15,7 @@ You must specify the the commit message pattern by defining `:lein-git-spec` in 
 i.e `:lein-git-spec [[:story-id :required] [:software-component :optional]]`
 
 `:required` means that the field must be entered in order to commit
+`:optional` can be skipped 
 
 To commit:
 
@@ -30,6 +31,27 @@ To commit:
         
     Commited with the message: [ [JIRA-1234] [Order-System] [refactor add2basket functionality] ]
     
+
+To search:
+
+    #//Assuming [[:story-id :required] [:software-component :optional]] 
+    $ lein git search
+    All commits follow the spec:  [[:story-id :required] [:software-component :optional]]
+    
+    Select the field you want to search for: 
+    **** :story-id -> (Enter 0)
+    **** :software-component -> (Enter 1)
+    0
+    
+    Enter your query:
+    JIRA-4
+    
+    RESULT FOR YOUR QUERY  :story-id = JIRA -4
+    
+    ||=================COMMIT==================||===================MESSAGE===================
+    ||9fc918a25cb8e37d61d1c9ed7bdc09a8a0836512 || {:story-id "[JIRA-4]", :software-component "[order]", :commit-msg "[implement a]"}
+    ||f28a1cfa4fe66edb263fda6eba082181f34db506 || {:story-id "[JIRA-4]", :software-component "[order]", :commit-msg "[implement a"}
+   
 
 ## License
 
