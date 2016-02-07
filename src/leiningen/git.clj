@@ -9,7 +9,7 @@
 Usage:
 to commit:  - lein git commit [-m -am] \"message\"
 to search:  - lein git search -i for the interactive mode
-            - lein git search -q \"query\" :story-id=JIRA-1234
+            - lein git search -q \"query\" i.e \"story-id=JIRA-1234\"
 to see spec - lein git spec
 
 The current dir must be a git repository.

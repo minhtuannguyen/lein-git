@@ -84,9 +84,8 @@
       [nil nil])))
 
 (defn do-in-query-mode [query spec]
-  (println "cc" query)
   (let [[spec-name value] (parse-query query)]
-    (when (or (nil? spec-name) (nil? value))
-      (println "query is not correct"))
-    (do-search
-      (structured-logs-of spec c/get-logs) value spec-name)))
+    (if (or (nil? spec-name) (nil? value))
+      (println "query is not correct")
+      (do-search
+        (structured-logs-of spec c/get-logs) value (keyword spec-name)))))

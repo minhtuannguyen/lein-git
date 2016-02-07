@@ -34,8 +34,9 @@ To commit:
 
 To search:
 
-    #//Assuming [[:story-id :required] [:software-component :optional]] 
-    $ lein git search
+    #Assuming [[:story-id :required] [:software-component :optional]] 
+    #In interactive mode 
+    $ lein git search -i
     All commits follow the spec:  [[:story-id :required] [:software-component :optional]]
     
     Select the field you want to search for: 
@@ -54,7 +55,10 @@ To search:
     |    [JIRA-4]     |             [order] |        [hi] | 7f6d85e424e3a15ee34b17df4587c78ab10465ac |
     |    [JIRA-4]     |              [view] |        [hi] | 4075b70524d9ea63eeaa70ea16eac0264680857d |
     
-   
+    #Alternativ in query mode
+    $ lein git search -q "story-id = JIRA-4"
+    
+
 
 ## License
 
