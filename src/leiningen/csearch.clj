@@ -1,9 +1,10 @@
 (ns leiningen.csearch
   (:require [leiningen.command :as c]
             [leiningen.specification :as s]
+            [clojure.pprint :as pp]
             [leiningen.utils :as u]))
 
-(def ask-for-query-str "\nEnter your query:")
+(def ask-for-query "\nEnter your query:")
 
 (defn- logs-map-of [extra-content spec]
   (let [all-spec-names (s/get-all-spec-names spec)
@@ -35,9 +36,9 @@
     (map #(log->edn % spec) logs)))
 
 (defn- search-option-display-str [[first second]]
-  (str "**** " second " -> (Enter " first ")\n"))
+  (str "*** " second " -> (Enter " first ")\n"))
 
-(defn- is-input-valid? [s]
+(defn- input-valid? [s]
   (try
     (Integer/parseInt s)
     true
@@ -52,21 +53,18 @@
   (filter #(matches? % spec-name query) db))
 
 (defn- print-result [results spec query]
-  (println "\nRESULT FOR YOUR QUERY " spec "=" query "\n
-||=================COMMIT==================||===================MESSAGE===================")
-  (let [result-representation (map #(str "||" (:commit %) " || " (:message %) "||\n") results)]
-    (println (reduce str result-representation))
-    (println "\n")))
+  (println "\nRESULT FOR YOUR QUERY " spec "=" query "\n")
+  (pp/print-table results))
 
 (defn do [spec]
   (println "Select the field you want to search for: ")
   (let [indexed-spec (map-indexed vector (s/get-all-spec-names spec))
         question (reduce str (map search-option-display-str indexed-spec))
-        user-spec-decision (u/get-validated-input question is-input-valid?)
-        chosen-spec-name (second (nth indexed-spec (Integer/parseInt user-spec-decision)))
-        user-query (u/get-validated-input ask-for-query-str u/not-blank?)
+        user-spec (u/get-validated-input question input-valid?)
+        user-spec-name (second (nth indexed-spec (Integer/parseInt user-spec)))
+        user-query (u/get-validated-input ask-for-query u/not-blank?)
         db (structured-logs-of spec c/get-logs)
-        search-result (search db user-query chosen-spec-name)]
+        search-result (search db user-query user-spec-name)]
     (if (= 0 (count search-result))
-      (println "NO COMMIT MATCHES YOUR QUERY " chosen-spec-name "=" user-query)
-      (print-result search-result chosen-spec-name user-query))))
+      (println "NO COMMIT MATCHES YOUR QUERY " user-spec-name "=" user-query)
+      (print-result search-result user-spec-name user-query))))
