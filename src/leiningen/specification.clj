@@ -1,7 +1,7 @@
 (ns leiningen.specification
-  (:require [clojure.string :as str]))
+  (:require [leiningen.utils :as u]))
 
-(defn required-input [input] (not (str/blank? input)))
+(defn required-input [input] (u/not-blank? input))
 (defn optinal-input [_] true)
 
 (defn- detect-validate-fnc [constraint-name]

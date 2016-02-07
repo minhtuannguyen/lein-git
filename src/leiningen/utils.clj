@@ -1,5 +1,6 @@
 (ns leiningen.utils
-  (:require [clojure.java.shell :as sh]))
+  (:require [clojure.java.shell :as sh]
+            [clojure.string :as str]))
 
 (defn is-success [shell-result]
   (= (:exit shell-result) 0))
@@ -12,6 +13,9 @@
 (defn is-git-repository []
   (let [result (sh/sh "git" "rev-parse")]
     (is-success result)))
+
+(defn not-blank? [s]
+  (not (str/blank? s)))
 
 (defn get-input [prompt]
   (println prompt)

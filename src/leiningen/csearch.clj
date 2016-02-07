@@ -1,8 +1,9 @@
 (ns leiningen.csearch
   (:require [leiningen.command :as c]
             [leiningen.specification :as s]
-            [leiningen.utils :as u]
-            [leiningen.core.main :as main]))
+            [leiningen.utils :as u]))
+
+(def ask-for-query "\nEnter your query:")
 
 (defn- log-map-of [extra-content spec]
   (let [all-spec-names (s/get-all-spec-names spec)
@@ -32,8 +33,8 @@
   (let [logs (git-logs-fnc)]
     (map #(log->edn % spec) logs)))
 
-(defn display-search-option [[first second]]
-  (str "*" second "(" first ")\n"))
+(defn- display-search-option [[first second]]
+  (str "**** " second " -> (Enter " first ")\n"))
 
 (defn- is-input-valid? [s]
   (try
@@ -42,12 +43,29 @@
     (catch Exception _
       false)))
 
+(defn- matches [entry spec-name query]
+  (let [content (get-in entry [:message spec-name])]
+    (and (not (nil? content)) (.contains content query))))
+
+(defn- search [db query spec-name]
+  (filter #(matches % spec-name query) db))
+
+(defn- print-result [results spec query]
+  (println "\nRESULT FOR YOUR QUERY " spec "=" query "\n
+||=================COMMIT==================||===================MESSAGE===================")
+  (let [result-representation (map #(str "||" (:commit %) " || " (:message %) "||\n") results)]
+    (println (reduce str result-representation))
+    (println "\n")))
+
 (defn run [spec]
   (println "Select the field you want to search for: ")
-  (let [indexed-spec-names (map-indexed vector (s/get-all-spec-names spec))
-        question (reduce str (map display-search-option indexed-spec-names))
-        user-decision (u/get-validated-input question is-input-valid?)
-        chosen-spec (nth indexed-spec-names (Integer/parseInt user-decision))
-        db (get-structured-logs spec c/get-logs)]
-
-    (println "you choose " chosen-spec)))
+  (let [indexed-spec (map-indexed vector (s/get-all-spec-names spec))
+        question (reduce str (map display-search-option indexed-spec))
+        user-spec-decision (u/get-validated-input question is-input-valid?)
+        chosen-spec-name (second (nth indexed-spec (Integer/parseInt user-spec-decision)))
+        user-query (u/get-validated-input ask-for-query u/not-blank?)
+        db (get-structured-logs spec c/get-logs)
+        search-result (search db user-query chosen-spec-name)]
+    (if (= 0 (count search-result))
+      (println "NO COMMIT MATCHES YOUR QUERY " chosen-spec-name "=" user-query)
+      (print-result search-result chosen-spec-name user-query))))
