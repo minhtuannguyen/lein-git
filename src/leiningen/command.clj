@@ -4,7 +4,7 @@
             [leiningen.utils :as u]
             [clojure.string :as str]))
 
-(def json-format "--pretty=format:'{\"commit\" : \"%H\",\"message\" : \"%s\"},'")
+(def json-format "--pretty=format:'{####====commit####==== : ####====%H####====,####====message####==== : ####====%s####====},'")
 
 (defn commit-with [message shell-fnc]
   (if (str/blank? message)
@@ -19,9 +19,11 @@
     (println result)))
 
 (defn log->json [s]
-  (let [clean-s (str/replace s #"\'" "")
-        s-w-o-last-comma (u/remove-from-end clean-s ",")
-        complete-s (str "[" (str/replace s-w-o-last-comma #"\'" "") "]")]
+  (let [wo-singe_quote (str/replace s #"\'" "")
+        wo-double-quote (str/replace wo-singe_quote #"\"" "")
+        convert-json-magic-to-doube-quoute (str/replace wo-double-quote #"####====" "\"")
+        wo-last-singe-quoute (u/remove-from-end convert-json-magic-to-doube-quoute ",")
+        complete-s (str "[" (str/replace wo-last-singe-quoute #"\'" "") "]")]
     (json/read-str complete-s :key-fn keyword)))
 
 (defn get-logs []
